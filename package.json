@@ -3,16 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@microsoft/signalr": "^5.0.8",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "bootstrap": "^5.0.2",
     "react": "^17.0.2",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "^17.0.2",
+    "react-json-editor-ajrm": "^2.5.13",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-spring": "^9.2.4",
+    "recharts": "^2.0.10",
+    "redux": "^4.1.0",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.3.0",
     "web-vitals": "^1.0.1"
   },
+  "main": "main.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm-run-all --parallel client electron-halt-for-react",
+    "client": "react-scripts start",
+    "electron-halt-for-react": "powershell.exe Write-Host \"'Loading React Development Environment...'\" -ForegroundColor DarkGreen && Timeout /NoBreak 10 && electron .",
+    "electron": "electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -34,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^13.1.6"
   }
 }
