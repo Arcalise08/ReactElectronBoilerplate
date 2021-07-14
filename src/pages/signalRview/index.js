@@ -14,7 +14,8 @@ const Index = ({Messages, SignalR, setSignalR, BaseURL, addMessages}) => {
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
-    connect();
+    if (signalRHub?.length > 0)
+      connect();
   }, [triggers])
 
   const connect = async () => {
