@@ -12,6 +12,10 @@ export const setPopup = value => ({
   type: Types.SET_POP_UP, value
 })
 
+export const setSavedRequests = value => ({
+  type: Types.SET_SAVED_REQUESTS, value
+})
+
 export const addMessages = value => ({
   type: Types.ADD_MESSAGE, value
 })

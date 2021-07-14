@@ -7,3 +7,5 @@ export const SET_SIGNAL_R = "SET_SIGNAL_R";
 export const SET_BASE_API_URL = "SET_BASE_API_URL";
 export const SET_DIM_BACKGROUND = "SET_DIM_BACKGROUND";
 export const SET_POP_UP = "SET_POP_UP";
+
+export const SET_SAVED_REQUESTS = "SET_SAVED_REQUESTS";

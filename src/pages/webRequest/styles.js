@@ -3,6 +3,7 @@ import {Colors} from '../../app_globals';
 
 export const NavigationItem = styled.div`
   flex:1;
+  height:50px;
   display:flex;
   justify-content:center;
   align-items:center; 

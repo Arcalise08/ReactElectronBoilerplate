@@ -18,6 +18,7 @@ const Header = ({activeTab, setActiveTab}) => {
         for (let i=0; i < TABS.length; i++) {
             const temp = <NavItem
                 name={TABS[i]}
+                key={i}
                 position={getPosition(i, TABS.length)}
                 active={activeTab === TABS[i]}
                 onClick={() => setActiveTab(TABS[i])}
@@ -28,8 +29,7 @@ const Header = ({activeTab, setActiveTab}) => {
     }
     return (
         <div style={{
-            flex: 1,
-            maxHeight: 50,
+            height: 50,
             display: "flex",
             borderWidth: "1px 0 0 0",
             borderStyle: "solid",

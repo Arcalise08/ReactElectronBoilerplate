@@ -72,6 +72,15 @@ const Popup = (state = initialPopup, action) => {
   }
 }
 
+const SavedRequests = (state = [], action) => {
+  switch (action.type) {
+    case Types.SET_SAVED_REQUESTS:
+      return action.value;
+    default:
+      return state;
+  }
+}
+
 const Messages = (state = [], action) => {
   switch (action.type) {
     case Types.ADD_MESSAGE:
@@ -94,7 +103,8 @@ const globalReducers = combineReducers({
   SignalR,
   BaseURL,
   DimBackground,
-  Popup
+  Popup,
+  SavedRequests
 })
 
 export default globalReducers;
