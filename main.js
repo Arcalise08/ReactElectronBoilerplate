@@ -13,7 +13,15 @@ let mainWindow;
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 800, height: 600});
+    mainWindow = new BrowserWindow(
+        {
+            width: 1280, height: 960, darkTheme: true,
+            title:"Complete Api Tester",
+            webPreferences: {
+                enableRemoteModule: true, contextIsolation: false, nodeIntegration: true, nodeIntegrationInWorker: true
+            }
+        }
+    );
 
     // and load the index.html of the app.
     mainWindow.loadURL('http://localhost:3000');
@@ -28,6 +36,8 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+
+
 }
 
 // This method will be called when Electron has finished

@@ -2,11 +2,13 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
-import WebListView from "../components/ListView";
-import ArcButton from "../../../components/ArcButton";
-import RadioButton from "../../../components/RadioButton";
+import WebListView from "./ListView";
+import ArcButton from "../../../../components/ArcButton";
+import RadioButton from "../../../../components/RadioButton";
 import {RequestItem} from "./styles";
-import {setSavedRequests} from "../../../redux/actions";
+import {setSavedRequests} from "../../../../redux/actions";
+import SavedRequest from "./SavedRequest";
+import _ from 'lodash';
 
 const defaultHeaders = [
     { key: "User-Agent", value: "ApiTester/0.1.0", default: true,  },
@@ -24,7 +26,7 @@ const defaultRequest = {
     name:""
 }
 
-const RequestBuilder = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) => {
+const Index = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) => {
     const [activeRequest, setActiveRequest] = useState({...defaultRequest})
 
     const setRequestProperty = (type, prop) => {
@@ -168,7 +170,8 @@ const RequestBuilder = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) 
     }
 
     const changeViewRequest = (request) => {
-        saveRequest();
+        if (!_.isEqual(activeRequest, defaultRequest))
+            saveRequest();
         setActiveRequest(request)
     }
 
@@ -192,7 +195,7 @@ const RequestBuilder = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) 
     return (
         <div style={{display:"flex", flex:1, padding:5, margin:5, flexDirection:"column"}}>
             <div style={{flexDirection:"row", display:"flex", flex:1}}>
-                <div style={{flex:1, display:"flex", flexDirection:"column"}}>
+                <div style={{flex:1, display:"flex", flexDirection:"column", minWidth:"30%"}}>
                     <p style={{textAlign:"center", margin:0, fontWeight:"bold",
                         borderStyle:"solid", borderWidth:1, padding:10}}>
                         Saved Requests
@@ -324,26 +327,7 @@ const RequestBuilder = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) 
     )
 }
 
-const SavedRequest = ({method, name, active, onClick}) => {
-    const getMethodColor = () => {
-        switch (method) {
-            case "GET":
-                return "#4DA3F8";
-            case "PUT":
-                return "#F2F281";
-            case "POST":
-                return "green";
-            case "DELETE":
-                return "red";
-        }
-    }
-    return (
-        <RequestItem active={active} onClick={onClick}>
-            <p style={{fontSize: 18, fontWeight: "bold", marginLeft: 25, color: getMethodColor()}}>{method}</p>
-            <p style={{fontSize: 18, color: "gray", textAlign: "center"}}>{name}</p>
-        </RequestItem>
-    )
-}
+
 
 let mapStateToProps = state => {
     return {
@@ -353,4 +337,4 @@ let mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, {setSavedRequests})(RequestBuilder);
+export default connect(mapStateToProps, {setSavedRequests})(Index);

@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import { setSignalR, addMessages } from "../../redux/actions";
 
 
-
 const Index = ({Messages, SignalR, setSignalR, BaseURL, addMessages}) => {
   const [signalRHub, setSignalRHub] = useState("");
   const [triggers, setTriggers] = useState([]);

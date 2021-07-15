@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^5.0.2",
+    "lodash": "^4.17.21",
     "lodash-move": "^1.1.1",
     "lodash.clamp": "^4.0.3",
     "react": "^17.0.2",
@@ -27,9 +28,9 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "npm-run-all --parallel client electron-halt-for-react",
-    "client": "react-scripts start",
-    "electron-halt-for-react": "powershell.exe Write-Host \"'Loading React Development Environment...'\" -ForegroundColor DarkGreen && Timeout /NoBreak 10 && electron .",
+    "start": "npm-run-all --parallel client electron-halt-for-react --silent",
+    "client": "powershell.exe start-process react-scripts start",
+    "electron-halt-for-react": "powershell.exe Write-Host \"'Loading React Development Environment...'\" -ForegroundColor DarkGreen && Timeout /NoBreak 10 && electron . && powershell.exe Write-Host \"'React Environment Loaded'\" -ForegroundColor DarkGreen",
     "electron": "electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -54,6 +55,7 @@
     ]
   },
   "devDependencies": {
-    "electron": "^13.1.6"
+    "electron": "^13.1.6",
+    "worker-loader": "^3.0.8"
   }
 }

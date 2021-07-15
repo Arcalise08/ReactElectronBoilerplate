@@ -1,12 +1,10 @@
 import React, {useState} from 'react';
 import Header from "./header";
 import RequestBuilder from "./pages/requestbuilder";
-import EndPointTesting from "./pages/endpoint";
 import LoadTesting from "./pages/loadtesting";
 
 export const TABS = [
     "Request Builder",
-    "Endpoint Testing",
     "Load Testing"
 ]
 
@@ -18,8 +16,6 @@ const Index = () => {
             case TABS[0]:
                 return <RequestBuilder/>;
             case TABS[1]:
-                return <EndPointTesting/>;
-            case TABS[2]:
                 return <LoadTesting/>;
         }
     }

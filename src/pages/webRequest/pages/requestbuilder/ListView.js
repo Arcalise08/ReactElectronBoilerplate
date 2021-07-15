@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import {ClickableX} from "./styles";
 import {Image} from 'react-bootstrap';
-import CancelIcon from '../../../assets/cancel.png';
-import SaveIcon from '../../../assets/save.png';
-import ArcButton from "../../../components/ArcButton";
+import CancelIcon from '../../../../assets/cancel.png';
+import SaveIcon from '../../../../assets/save.png';
+import ArcButton from "../../../../components/ArcButton";
 
 const WebListView = ({items, onRemove, onChange, onAdd, onAddAuth, buttonTitle}) => {
     return (

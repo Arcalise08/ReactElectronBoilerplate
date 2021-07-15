@@ -7,13 +7,13 @@ export const NavigationItem = styled.div`
   display:flex;
   justify-content:center;
   align-items:center; 
-  border-width:1px;
+  border-right-width:1px;
+  border-top-width: 0;
+  border-bottom-width:1px;
+  border-left-width: 0;
   cursor:pointer;
   background-color: ${({active}) => active ? Colors.navItemColor : "transparent"};
   border-style:groove;
-  border-top:0;
-  border-bottom-left-radius:${({position}) => position === "left" ? "80px" : 0};
-  border-bottom-right-radius:${({position}) => position === "right" ? "80px" : 0};
   &:hover {
     background-color: ${Colors.navHoverColor};
   }
