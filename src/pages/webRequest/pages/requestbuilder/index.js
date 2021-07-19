@@ -23,7 +23,8 @@ const defaultRequest = {
     id: null,
     endPoint:"",
     body:"",
-    name:""
+    name:"",
+    url: null,
 }
 
 const Index = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) => {
@@ -63,6 +64,7 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) => {
     const addNewRequest = () => {
         const toSave = {...defaultRequest};
         const tempArr = [...SavedRequests];
+        toSave.url = BaseURL;
         toSave.id = idGenerator(tempArr);
         setActiveRequest(toSave);
         setSavedRequests([toSave, ...tempArr])
@@ -71,6 +73,7 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedRequests}) => {
     const saveRequest = () => {
         const toSave = {...activeRequest}
         const tempArr = SavedRequests?.length ? SavedRequests : [];
+        toSave.url = BaseURL;
         if (toSave?.id === null) {
             toSave.id = idGenerator(tempArr);
             tempArr.push(toSave);

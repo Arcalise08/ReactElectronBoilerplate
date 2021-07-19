@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Colors} from '../../app_globals';
+
 
 export const NavigationItem = styled.div`
   flex:1;
@@ -12,9 +12,9 @@ export const NavigationItem = styled.div`
   border-bottom-width:1px;
   border-left-width: 0;
   cursor:pointer;
-  background-color: ${({active}) => active ? Colors.navItemColor : "transparent"};
+  background-color: ${({active, backgroundColor}) => active ? backgroundColor : "transparent"};
   border-style:groove;
   &:hover {
-    background-color: ${Colors.navHoverColor};
+    background-color: ${({onHoverColor}) => onHoverColor ?? "transparent"};
   }
 `

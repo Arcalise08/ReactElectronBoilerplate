@@ -1,9 +1,12 @@
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import TimerWorker from 'worker-loader!./timer.js';
 const $RefreshReg$ = () => {};
 
+let timer = null;
+let time = 0;
 
 onmessage = async (eve) => {
    const status = eve?.data?.status;
-   console.log(eve);
    switch (status){
       case "begin":
          StartRequests(eve?.data?.requests, eve?.data?.threadName)
@@ -12,37 +15,55 @@ onmessage = async (eve) => {
          break;
    }
 }
+const listener = (msg) => {
+   //time = msg?.data;
+}
+
 const StartRequests = async (requests, threadIndex) => {
    const results = [];
+   timer = setInterval(() => time++, 10)
+
+   //timer.addEventListener("message", listener)
+   //timer.postMessage("begin");
+
+   if (!requests || !requests?.length) {
+      const response = {msg:"results", thread: threadIndex, results: []};
+      postMessage(response);
+      return;
+   }
    for (let i=0; i < requests?.length; i++) {
       const headers = {};
       for (let a=0; a < requests[i]?.headers?.length; a++) {
          headers[requests[i].headers[a].key] = requests[i].headers[a].value;
       }
-      if (requests[i].method === "GET") {
-         const url = !requests[i]?.params || !requests[i]?.length ? requests[i].url : requests[i].url + requests[i]?.params;
-         const request = fetch(url, {
-            headers: headers,
-            method: requests[i].method
-         });
+      let url = requests[i].url + requests[i].endPoint;
+      let body = null;
+      if (requests[i].method === "GET")
+         url += requests[i]?.params ?? "";
+      else
+         body = requests[i].body;
 
-         const timeout = new Promise((resolve, reject) => setTimeout(() => {reject("timeout")}, 1500))
-         results.push(Promise.race([request, timeout]));
-      }
-      else {
-
-      }
+      const response = await AttemptRequest(timer, url, headers, requests[i].method, body);
+      const toResults = {...response, request: requests[i]}
+      results.push(toResults);
    }
-   const processed = await ProcessResults(results)
-   const response = {msg:"results", thread: threadIndex, results: [...processed]};
+
+   const response = {msg:"results", thread: threadIndex, results: [...results], totalTime: time};
+   clearInterval(timer);
    postMessage(response);
 }
 
-const ProcessResults = async (results) => {
-   const processed = [];
-   const responses = await Promise.all(results);
-   responses.map(item => processed.push(item?.json() ?? item))
-   return await Promise.all(processed);
+const AttemptRequest = async (timer, url, headers, method, body) => {
+   let startTime = parseInt(`${time}`);
+   const init = {
+      headers: headers,
+      method: method,
+   }
+   if (body !== null && method !== "GET")
+      init.body = body;
+   const request = await fetch(url, init);
+   let endTime = parseInt(`${time}`);
+   return {success: request?.ok, url:request?.url, status: request?.status, completedIn: endTime - startTime }
 }
 
 

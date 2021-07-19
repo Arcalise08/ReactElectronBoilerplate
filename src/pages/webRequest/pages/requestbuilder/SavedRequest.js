@@ -1,7 +1,7 @@
 import {RequestItem} from "./styles";
 import React from "react";
 
-const SavedRequest = ({method, name, active, onClick}) => {
+const SavedRequest = ({method, name, active, onClick, center}) => {
     const getMethodColor = () => {
         switch (method) {
             case "GET":
@@ -16,7 +16,7 @@ const SavedRequest = ({method, name, active, onClick}) => {
     }
     return (
         <RequestItem active={active} onClick={onClick} >
-            <p style={{fontSize: 18, fontWeight: "bold", marginLeft: 25, color: getMethodColor()}}>{method}</p>
+            <p style={{fontSize: 18, fontWeight: "bold", marginLeft: center ? 0 : 25, textAlign: center ? "center" : "initial", color: getMethodColor()}}>{method}</p>
             <p style={{fontSize: 18, color: "gray", textAlign: "center"}}>{name}</p>
         </RequestItem>
     )

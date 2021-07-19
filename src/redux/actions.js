@@ -16,6 +16,14 @@ export const setSavedRequests = value => ({
   type: Types.SET_SAVED_REQUESTS, value
 })
 
+export const setNavigation = value => ({
+  type: Types.SET_NAVIGATION, value
+})
+
+export const setSavedResults = value => ({
+  type: Types.SET_SAVED_RESULTS, value
+})
+
 export const addMessages = value => ({
   type: Types.ADD_MESSAGE, value
 })

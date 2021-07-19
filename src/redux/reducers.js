@@ -37,9 +37,18 @@ const SignalR = (state = false, action) => {
   }
 }
 
-const BaseURL = (state = "http://localhost", action) => {
+const BaseURL = (state = "https://jsonplaceholder.typicode.com/todos/1", action) => {
   switch (action.type) {
     case Types.SET_BASE_API_URL:
+      return action.value;
+    default:
+      return state;
+  }
+}
+
+const NavLocation = (state = "signalR", action) => {
+  switch (action.type) {
+    case Types.SET_NAVIGATION:
       return action.value;
     default:
       return state;
@@ -81,6 +90,18 @@ const SavedRequests = (state = [], action) => {
   }
 }
 
+const SavedResults = (state = [], action) => {
+  switch (action.type) {
+    case Types.SET_SAVED_RESULTS:
+      const temp = [...state];
+      temp.push(action.value);
+      return temp;
+    default:
+      return state;
+  }
+}
+
+
 const Messages = (state = [], action) => {
   switch (action.type) {
     case Types.ADD_MESSAGE:
@@ -104,7 +125,9 @@ const globalReducers = combineReducers({
   BaseURL,
   DimBackground,
   Popup,
-  SavedRequests
+  SavedRequests,
+  SavedResults,
+  NavLocation
 })
 
 export default globalReducers;

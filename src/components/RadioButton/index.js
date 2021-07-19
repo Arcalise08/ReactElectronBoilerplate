@@ -12,9 +12,9 @@ const RadioButton = ({disabled, size, value, children, onChange, style}) => {
             {children}
             {
                 value ?
-                    <HighlightImage disabled={disabled} size={size} onClick={disabled ? null : onChange} src={checked} />
+                    <HighlightImage disabled={disabled} size={size} onClick={ () => disabled ? null : onChange(false)} src={checked} />
                     :
-                    <HighlightImage disabled={disabled} size={size} onClick={disabled ? null : onChange} src={unchecked} />
+                    <HighlightImage disabled={disabled} size={size} onClick={() => disabled ? null : onChange(true)} src={unchecked} />
             }
         </div>
     )

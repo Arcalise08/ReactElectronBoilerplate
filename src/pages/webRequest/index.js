@@ -21,7 +21,7 @@ const Index = () => {
     }
 
     return (
-        <div style={{display:"flex", flex:1, flexDirection:"column", height:"100%", overflowY:"scroll"}}>
+        <div style={{display:"flex", flex:1, flexDirection:"column", height:"100%", overflowY:"scroll", overflowX:"hidden"}}>
             <Header activeTab={activeTab} setActiveTab={(e) => setActiveTab(e)}/>
             {GetActiveTab()}
         </div>

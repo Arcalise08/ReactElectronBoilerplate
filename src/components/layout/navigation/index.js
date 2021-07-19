@@ -2,22 +2,24 @@ import React, {useEffect, useState} from 'react';
 import {PAGES} from '../../../app_globals';
 import NavItem from './navitem';
 import {useHistory} from 'react-router-dom';
+import {connect} from "react-redux";
+import {setSavedRequests, setNavigation} from "../../../redux/actions";
 
-const Navigation = () => {
+const Navigation = ({navLocation, setNavigation}) => {
     const [location, setLocation] = useState("signalR");
     const history = useHistory();
 
     useEffect(() => {
-        const loc = history?.location?.pathname;
-        const newLoc = loc ? loc.replace("/", ""): "signalR"
+        console.log(navLocation);
+
+        const newLoc = navLocation ? navLocation.replace("/", ""): "signalR"
+        history.push(newLoc);
         setLocation(newLoc);
-        console.log(newLoc);
-    }, [history])
+    }, [navLocation])
 
 
     const moveLocation = (loc) => {
-        history.push(loc);
-        setLocation(loc);
+        setNavigation(loc);
     }
 
     const buildNav = () => {
@@ -34,7 +36,7 @@ const Navigation = () => {
         return builder;
     }
     return (
-        <div style={{flexDirection:"column", display:"flex", flex:1, maxWidth:155,
+        <div style={{flexDirection:"column", display:"flex", flex:1, maxWidth:155, minWidth:100,
             borderStyle:"solid", borderWidth:0, borderRightWidth:1, borderColor:"gray"}}>
             {buildNav()}
         </div>
@@ -45,4 +47,10 @@ const Navigation = () => {
 
 
 
-export default Navigation;
+let mapStateToProps = state => {
+    return {
+        navLocation: state.NavLocation
+    }
+}
+
+export default connect(mapStateToProps, {setSavedRequests, setNavigation})(Navigation);

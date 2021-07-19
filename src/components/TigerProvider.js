@@ -16,12 +16,10 @@ const TigerProvider = ({children, isDimBackground}) => {
 
     const transitionIn = () => {
         setActive(true);
-        console.log("setting active");
         api.start({from: {backgroundColor:"transparent"}, to: {backgroundColor:"rgba(175, 175, 175, 0.46)"}});
     }
 
     const transitionOut = () => {
-        console.log("setting inactive");
         api.start({from: {backgroundColor:"rgba(175, 175, 175, 0.46)"}, to: {backgroundColor:"transparent"}});
 
         setTimeout(() => {

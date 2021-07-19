@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationItem} from "./styles";
 import {TABS} from "./index";
+import {Colors} from "../../app_globals";
 
 
 const Header = ({activeTab, setActiveTab}) => {
@@ -43,6 +44,8 @@ const Header = ({activeTab, setActiveTab}) => {
 
 const NavItem = ({name, position, active, onClick}) => (
     <NavigationItem
+        backgroundColor={Colors.navItemColor}
+        onHoverColor={Colors.navItemColor}
         position={position}
         active={active}
         onClick={onClick}

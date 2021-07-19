@@ -1,33 +1,62 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {useSpring, animated} from 'react-spring';
-import {useMove, useDrag} from "react-use-gesture";
+import ReactDOM from 'react-dom';
 
 import {RequestItem} from "./styles";
 import {Colors} from "../../../../app_globals";
+import {Draggable} from "react-beautiful-dnd";
 
 const Item = animated(RequestItem);
 
 const SavedRequest = ({method, name, active, onClick, onDragStart, onDragEnd}) => {
     const [isFloating, setIsFloating] = useState(false);
-    const [{x, y}, set] = useSpring(() => ({x: 0, y: 0}))
-
+    const [styles, set] = useSpring(() => ({transform: "translate(0px, 0px)"}))
+    const [initialPosition, setInitialPosition] = useState(null);
+    useEffect(() => {
+        setIsFloating(false)
+        console.clear();
+    }, [])
 
     useEffect(() => {
-        if (isFloating)
+        if (isFloating) {
             onDragStart();
-        else
+        }
+        else {
             onDragEnd()
+        }
+
     }, [isFloating])
 
-    const bind = useDrag(({down, movement: [mx, my], event}) => {
-        set({x: down ? mx : 0, y: down ? my : 0});
-        setIsFloating(true);
-        if (!down)
-            setTimeout(() => {
-                setIsFloating(false)
-            }, 250)
-    })
 
+    const handleMouseBind = (e) => {
+        e.preventDefault();
+        const offset = e.target.getBoundingClientRect();
+        if (!isFloating) {
+            setIsFloating(true);
+            setInitialPosition({ left: e.clientX - offset.width, top: e.clientY - offset.height })
+        }
+
+        if (e.pageY === 0 || e.pageX === 0)
+            return;
+
+        set({ left: e.clientX - offset.width, top: e.clientY - offset.y })
+    }
+
+    const reset = (e) => {
+        e.preventDefault();
+        const offset = e.target.getBoundingClientRect();
+        set( {
+            from:
+                {left: e.pageX - offset.width, top: e.pageY - offset.height},
+            to: {left: initialPosition.left, top:initialPosition.top},
+            config: {duration: 250} });
+        setTimeout(() => {
+            setIsFloating(false);
+            setInitialPosition(null);
+            set({left:"", top:""})
+        }, 250)
+
+    }
 
 
 
@@ -46,29 +75,35 @@ const SavedRequest = ({method, name, active, onClick, onDragStart, onDragEnd}) =
 
     return (
         <div>
-            <Item {...bind()} active={active} style={{
-                x,
-                y,
-                pointerEvents: isFloating ? "none" : "visible",
-                touchAction: 'none',
-                userSelect: "none",
-                position: "absolute",
-                opacity: isFloating ? 1 : 0,
-            }}>
-                <p style={{
-                    fontSize: 18,
-                    touchAction: 'none',
-                    pointerEvents: "none",
-                    fontWeight: "bold",
-                    marginLeft: 25,
-                    color: getMethodColor()
-                }}>{method}</p>
-                <p style={{fontSize: 18,touchAction: 'none', pointerEvents: "none", color: "gray", textAlign: "center"}}>{name}</p>
-            </Item>
+            <Draggable draggableId={"draggable"} >
+                <Item
+                    active={active}
+                    style={{
+                        pointerEvents: isFloating ? "none" : "visible",
+                        touchAction: 'none',
+                        userSelect: "none",
+                        position: "absolute",
+                        opacity: isFloating ? 1 : 0,
+                        ...styles
+                    }}>
+
+                    <p style={{
+                        fontSize: 18,
+                        touchAction: 'none',
+                        pointerEvents: "none",
+                        fontWeight: "bold",
+                        marginLeft: 25,
+                        color: getMethodColor()
+                    }}>{method}</p>
+                    <p style={{fontSize: 18,touchAction: 'none', pointerEvents: "none", color: "gray", textAlign: "center"}}>{name}</p>
+                </Item>
+            </Draggable>
+
             <Item active={active} style={{
                 backgroundColor: isFloating ? Colors.navHoverColor : "transparent",
                 borderWidth: isFloating ? 0 : "0 0 1px 0"
             }}>
+
                 <p style={{
                     fontSize: 18,
                     opacity: isFloating ? 0 : 1,
