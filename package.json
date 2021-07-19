@@ -33,15 +33,19 @@
   "build": {
     "files": [
       "dist/**/*",
-      "package.json"
-    ]
+      "package.json",
+      "icon.png"
+    ],
+    "win": {
+      "icon": "build/icon.png"
+    }
   },
   "main": "public/electron.js",
   "scripts": {
-    "start": "npm-run-all --parallel client electron-halt-for-react --silent",
+    "start": "set NODE_MODULE=Development&& npm-run-all --parallel client electron-halt-for-react --silent",
     "client": "powershell.exe start-process react-scripts start",
     "electron-halt-for-react": "powershell.exe Write-Host \"'Loading React Development Environment...'\" -ForegroundColor DarkGreen && Timeout /NoBreak 10 && electron . && powershell.exe Write-Host \"'React Environment Loaded'\" -ForegroundColor DarkGreen",
-    "electron": "electron .",
+    "electron": "set NODE_MODULE=Development&& electron .",
     "electron-build": "electron",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",

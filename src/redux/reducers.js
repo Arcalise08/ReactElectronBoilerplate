@@ -81,6 +81,15 @@ const Popup = (state = initialPopup, action) => {
   }
 }
 
+const ThreadRequests = (state = [], action) => {
+  switch (action.type) {
+    case Types.SET_THREAD_REQUESTS:
+      return action.value;
+    default:
+      return state;
+  }
+}
+
 const SavedRequests = (state = [], action) => {
   switch (action.type) {
     case Types.SET_SAVED_REQUESTS:
@@ -96,6 +105,8 @@ const SavedResults = (state = [], action) => {
       const temp = [...state];
       temp.push(action.value);
       return temp;
+    case Types.OVERRIDE_SAVED_RESULTS:
+      return action.value;
     default:
       return state;
   }
@@ -117,6 +128,7 @@ const Messages = (state = [], action) => {
   }
 }
 
+
 const globalReducers = combineReducers({
   windowState,
   Messages,
@@ -126,6 +138,7 @@ const globalReducers = combineReducers({
   DimBackground,
   Popup,
   SavedRequests,
+  ThreadRequests,
   SavedResults,
   NavLocation
 })

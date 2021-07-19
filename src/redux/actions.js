@@ -20,8 +20,16 @@ export const setNavigation = value => ({
   type: Types.SET_NAVIGATION, value
 })
 
+export const setThreadRequests = value => ({
+  type: Types.SET_THREAD_REQUESTS, value
+})
+
 export const setSavedResults = value => ({
   type: Types.SET_SAVED_RESULTS, value
+})
+
+export const overrideSavedResults = value => ({
+  type: Types.OVERRIDE_SAVED_RESULTS, value
 })
 
 export const addMessages = value => ({

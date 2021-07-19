@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis} from 'recharts';
 import {connect} from "react-redux";
-import {setSavedRequests} from "../../redux/actions";
+import {overrideSavedResults, setThreadRequests, setNavigation} from "../../redux/actions";
 import {ListItem} from "./styles";
-import ArcButton from "../../components/ArcButton";
+import {Image} from "react-bootstrap";
+
+import refresh from '../../assets/refresh.png';
+import cancel from '../../assets/cancel.png';
 
 const convertResult = (r) => {
     if (!r)
@@ -65,7 +68,7 @@ const compareTime = (time, modifier) => {
 
 
 
-const Index = ({SavedResults, windowSize}) => {
+const Index = ({SavedResults, windowSize, setThreadRequests, setNavigation, overrideSavedResults}) => {
     const [activeData, setActiveData] = useState(null);
 
     useEffect(() => {
@@ -80,24 +83,52 @@ const Index = ({SavedResults, windowSize}) => {
             setActiveData(re);
     }
 
+    const removeSave = (index) => {
+        const temp = [...SavedResults];
+        temp.splice(index, 1);
+        overrideSavedResults(temp);
+        if (temp?.length === 0)
+            setNavigation("/requests");
+    }
+
+    const runAgain = (index) => {
+        const temp = {
+            requests: SavedResults[index]?.requests,
+            executions: SavedResults[index]?.executions,
+            concurrent: SavedResults[index]?.concurrent
+        }
+        console.log(temp);
+        setThreadRequests(temp);
+        setNavigation("/requests/loadtester")
+    }
+
     const buildSavedRequests = () => {
         const builder = [];
         for (let i=0; i < SavedResults?.length; i++) {
             const temp =
-                <ListItem key={i} onClick={() => switchResult(SavedResults[i])}>
-                    <p style={{margin:0}}>Concurrent Requests : {SavedResults[i].concurrent}</p>
-                    <p style={{fontWeight:"bold", textDecorationLine:"underline", margin:0}}>Ran on</p>
-                    <p>{new Date(SavedResults[i].dateTime).toDateString()}</p>
-                </ListItem>;
+                <ListItem onClick={() => switchResult(SavedResults[i])} key={i} style={{flexDirection:"row"}}>
+                    <div style={{textAlign:"center"}}>
+                        <p style={{margin:0}}>Concurrent Requests : {SavedResults[i].concurrent}</p>
+                        <p style={{fontWeight:"bold", textDecorationLine:"underline", margin:0}}>Ran on</p>
+                        <p style={{fontSize:14, margin:0}}>{new Date(SavedResults[i].dateTime).toDateString()}</p>
+                        <p style={{fontSize:14, margin:0}}>{new Date(SavedResults[i].dateTime).toTimeString()}</p>
+                    </div>
+                    <div style={{display:"flex", flexDirection:"column", marginRight:5, justifyContent:"flex-end", alignItems:"flex-end"}}>
+                        <Image onClick={() => runAgain(i)} src={refresh} style={{width:25, height:25}}/>
+                        <Image onClick={() => removeSave(i)} src={cancel} style={{width:25, height:25, marginTop:15}}/>
+                    </div>
+                </ListItem>
+
+            builder.push(temp);
+        }
+        if (builder?.length === 0) {
+            const temp = <div style={{width: "100%", height:"100%", display:"flex", justifyContent:"center", alignItems:"center"}}>
+                <p style={{fontStyle:"italic"}}>No Results Saved</p>
+            </div>
             builder.push(temp);
         }
         return builder;
     }
-
-    const runAgain = () => {
-
-    }
-
 
     return (
         <div style={{flex: 1, display: "flex", flexDirection: "column", overflowY: "scroll", padding:5}}>
@@ -110,7 +141,7 @@ const Index = ({SavedResults, windowSize}) => {
                 <div style={{flex: 4, display: "flex", position:"relative", flexDirection: "column"}}>
                     {
                         activeData === null &&
-                        <div style={{position:"absolute", left:0, right:0, top:0, bottom:0, display:"flex", justifyContent:"center", alignItems:"center", backgroundColor:"rgba(66, 66, 66, 0.25)"}}>
+                        <div style={{position:"absolute", left:0, right:0, top:0, bottom:0, display:"flex", justifyContent:"center", alignItems:"center", backgroundColor:"rgba(0, 0, 0, 0.55)"}}>
                             <p style={{fontSize:22, fontWeight:"bold"}}>No data</p>
                         </div>
                     }
@@ -139,17 +170,6 @@ const Index = ({SavedResults, windowSize}) => {
                             <Line type="monotone" dataKey="performance" stroke="blue"/>
                         </LineChart>
                     </ResponsiveContainer>
-                    {
-                        /*
-                    <div style={{display:"flex", justifyContent:"flex-end"}}>
-                        <ArcButton onClick={runAgain} style={{padding:10}}>
-                            <p style={{color:"white"}}>Run Again</p>
-                        </ArcButton>
-                    </div>
-                        * */
-                    }
-
-
                 </div>
             </div>
 
@@ -165,4 +185,4 @@ let mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, {setSavedRequests})(Index);
+export default connect(mapStateToProps, {overrideSavedResults, setThreadRequests, setNavigation})(Index);

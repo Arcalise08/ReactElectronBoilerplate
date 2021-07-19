@@ -7,12 +7,13 @@ import {Image} from 'react-bootstrap';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import ConcurrentWebWorker from 'worker-loader!../../../../WebWorkers/concurrent.worker.js';
 import HorizontalListView from "./HorizontalListView";
-import {setSavedResults, setNavigation} from "../../../../redux/actions";
+import {setThreadRequests, setSavedResults, setNavigation} from "../../../../redux/actions";
 
+const electron = window.require("electron").remote;
+const {dialog, Notification, app} = electron;
 
-const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigation}) => {
+const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigation, setThreadRequest, threadRequests}) => {
     const [concurrent, setConcurrent] = useState(1);
-    const [threads, setThreads] = useState([]);
     const [requests, setRequests] = useState([]);
     const [executions, setExecutions] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -21,24 +22,24 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigati
 
     useEffect(() => {
         setLoading(false);
-        onmessage = (msg) => {
-            console.log("--------------not web worker-----------------------")
-            console.log(msg)
-            console.log("---------------------------------------------------")
-        };
     },[])
 
+    useEffect(() => {
+        setConcurrent(threadRequests?.concurrent ?? 1);
+        setRequests(threadRequests?.requests ?? []);
+        setExecutions(threadRequests?.executions ?? 1);
+    },[threadRequests])
 
-    const terminateWorkers = () => {
-        disposeListeners();
-        threads.map(worker => worker?.terminate())
-    }
 
     const sendRequests = () => {
+        if (requests?.length === 0) {
+            new Notification({title: "Send Request Failed!", body: "There was an error sending your requests"}).show();
+            dialog.showErrorBox("No Requests Queued", "At least one request must be queued before dispatching!")
+            return;
+        }
         setLoading(true);
         //attachListeners();
         const builder = [];
-        terminateWorkers();
         console.clear();
         for (let i=0; i < concurrent; i++) {
             const e = new ConcurrentWebWorker()
@@ -51,6 +52,8 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigati
             const builder = [];
             for (let index=0; index < reqs?.length; index++) {
                 for (let exec = 0; exec < executions; exec++) {
+                    console.log(`pushing`)
+                    console.log(reqs[index]);
                     builder.push(reqs[index]);
                 }
             }
@@ -82,12 +85,6 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigati
     }
 
 
-    const disposeListeners = () => {
-        threads.map((thread, index) => {
-            console.log('disposing listener on thread ' + index)
-            thread.removeEventListener('message', globalListener)
-        })
-    }
 
     const globalListener = (msg) => {
         const results = [...threadResponse];
@@ -95,6 +92,7 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigati
         if (results.length === concurrent) {
             setLoading(false);
             const toSave = {};
+            toSave["executions"] = executions;
             toSave["dateTime"] = Date.now();
             toSave["concurrent"] = concurrent;
             const savedResults = [];
@@ -105,8 +103,11 @@ const Index = ({BaseURL, SavedRequests, windowSize, setSavedResults, setNavigati
             })
             toSave["results"] = savedResults;
             toSave["requests"] = requests;
+            const e= new Notification({title: "Load Test Complete!", body: "Click here to go to results!"});
+            e.on('click', () => setNavigation("/results"))
+            e.show();
             setSavedResults(toSave);
-            setNavigation("/results");
+
         }
         threadResponse = results;
     }
@@ -171,9 +172,10 @@ let mapStateToProps = state => {
     return {
         BaseURL: state.BaseURL,
         SavedRequests: state.SavedRequests,
-        windowSize: state.windowState
+        windowSize: state.windowState,
+        threadRequests: state.ThreadRequests
     }
 }
 
-export default connect(mapStateToProps, {setSavedResults, setNavigation})(Index);
+export default connect(mapStateToProps, {setSavedResults, setNavigation, setThreadRequests})(Index);
 

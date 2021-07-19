@@ -10,25 +10,23 @@ const Navigation = ({navLocation, setNavigation}) => {
     const history = useHistory();
 
     useEffect(() => {
-        console.log(navLocation);
-
-        const newLoc = navLocation ? navLocation.replace("/", ""): "signalR"
-        history.push(newLoc);
-        setLocation(newLoc);
+        moveLocation();
     }, [navLocation])
 
 
-    const moveLocation = (loc) => {
-        setNavigation(loc);
+    const moveLocation = () => {
+        const newLoc = navLocation ? navLocation : "/signalR"
+        history.push(newLoc);
+        setLocation(newLoc);
     }
 
     const buildNav = () => {
         const builder = [];
         for (let i=0; i < PAGES.length; i++) {
             const temp = <NavItem
-                onPress={() => moveLocation(PAGES[i].name)}
+                onPress={() => setNavigation( "/" + PAGES[i].name)}
                 key={i}
-                active={location === PAGES[i].name}
+                active={location.includes(PAGES[i].name)}
                 icon={PAGES[i].navIcon}
                 name={PAGES[i].friendlyName}/>
             builder.push(temp);
@@ -36,7 +34,7 @@ const Navigation = ({navLocation, setNavigation}) => {
         return builder;
     }
     return (
-        <div style={{flexDirection:"column", display:"flex", flex:1, maxWidth:155, minWidth:100,
+        <div style={{flexDirection:"column", display:"flex", flex:1, maxWidth:175, minWidth:150,
             borderStyle:"solid", borderWidth:0, borderRightWidth:1, borderColor:"gray"}}>
             {buildNav()}
         </div>
