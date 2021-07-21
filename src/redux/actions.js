@@ -8,6 +8,10 @@ export const setDimBackground = value => ({
   type: Types.SET_DIM_BACKGROUND, value
 })
 
+export const setQueuedMessages = value => ({
+  type: Types.SET_QUEUED_MESSAGES, value
+})
+
 export const setPopup = value => ({
   type: Types.SET_POP_UP, value
 })

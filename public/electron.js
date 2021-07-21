@@ -16,6 +16,10 @@ function createWindow() {
             }
         }
     );
+    mainWindow.center();
+
+    process.env.NODE_MODULE !== "Development" &&
+        mainWindow.removeMenu();
 
     process.env.NODE_MODULE === "Development" ?
         mainWindow.loadURL("http://localhost:3000")

@@ -2,12 +2,12 @@ import React from 'react';
 import {GenericButton} from "./styles";
 
 
-const ArcButton = ({onClick, backgroundColor, onHoverColor, children, title, fontSize, style}) => {
+const ArcButton = ({onClick, backgroundColor, onHoverColor, children, title, fontSize, disabled, style}) => {
     return (
         <GenericButton
-            backgroundColor={backgroundColor}
-            onHoverColor={onHoverColor}
-            onClick={onClick}
+            backgroundColor={disabled ? "gray" : backgroundColor}
+            onHoverColor={disabled ? "gray" : onHoverColor}
+            onClick={disabled ? () => {} : onClick}
             style={{...style}}
             >
             {

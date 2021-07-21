@@ -14,8 +14,6 @@ const SignalRHeader = ({signalRHub, setSignalRHub, onConnect, onDisconnect, Stat
   const [connectMessage, setConnectMessage] = useState(CONNECTION_STATES.disconnected);
 
   useEffect(() => {
-    console.log("running effect");
-    console.log(Status)
     setConnectMessage(Status?.message ?? CONNECTION_STATES.disconnected);
   }, [Status])
 

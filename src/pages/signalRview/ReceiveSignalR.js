@@ -43,13 +43,27 @@ const ReceiveSignalR = ({windowSize, Messages, Colors, setPopup, triggers, setTr
 
     const BuildMessageLog = () => {
         const builder = [];
-        const sortedMessages = Messages.sort((a, b) => b.time - a.time)
-        for (let i = 0; i < sortedMessages.length; i++) {
+        if (Messages?.length === 0)
+            return <div/>;
+        const sortedMessages = Messages?.sort((a, b) => b.time - a.time)
+        for (let i = 0; i < sortedMessages?.length; i++) {
+            let time = "";
+            try {
+                time = sortedMessages[i]?.time?.toDateString()
+            }
+            catch {
+                try {
+                    time = new Date(sortedMessages[i].time).toDateString();
+                }
+                catch {
+                    time = "Unknown Time"
+                }
+            }
             const temp = <ChatItem
                 key={i}
                 name={sortedMessages[i].name}
                 message={sortedMessages[i].message}
-                time={sortedMessages[i]?.time?.toDateString() ?? "unknown time"}
+                time={time}
                 isClient={sortedMessages[i].client}
                 Colors={Colors}
             />

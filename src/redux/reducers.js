@@ -37,6 +37,15 @@ const SignalR = (state = false, action) => {
   }
 }
 
+const QueuedMessages = (state = [], action) => {
+  switch (action.type) {
+    case Types.SET_QUEUED_MESSAGES:
+      return action.value;
+    default:
+      return state;
+  }
+}
+
 const BaseURL = (state = "https://jsonplaceholder.typicode.com/todos/1", action) => {
   switch (action.type) {
     case Types.SET_BASE_API_URL:
@@ -134,6 +143,7 @@ const globalReducers = combineReducers({
   Messages,
   Colors,
   SignalR,
+  QueuedMessages,
   BaseURL,
   DimBackground,
   Popup,

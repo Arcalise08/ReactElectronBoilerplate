@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import ListView from "../../components/ListView";
 import NumberSelector from "../../components/NumberSelector";
-import { addMessages, clearMessages, setPopup } from "../../redux/actions";
+import { addMessages, clearMessages, setPopup, setQueuedMessages } from "../../redux/actions";
 import { connect } from "react-redux";
 import ArcButton from "../../components/ArcButton";
 
 
-const SendSignalR = ({sendMessage, addMessages}) => {
+const SendSignalR = ({sendMessage, addMessages, setQueuedMessages, queuedMessages, disabled }) => {
   const [numberOfSends, setNumberOfSends] = useState(1);
   const [message, setMessage] = useState("");
-  const [queuedMessages, setQueuedMessages] = useState([]);
 
   const AddMessage = () => {
     if (message.length > 0){
@@ -21,18 +20,7 @@ const SendSignalR = ({sendMessage, addMessages}) => {
   }
 
   const executeMessages = () => {
-    for (let i=0; i < queuedMessages?.length; i++) {
-      for (let t=0; t < numberOfSends; t++) {
-        const constructMessage = {
-          client: true,
-          time: new Date(Date.now()),
-          message: queuedMessages[i],
-          name:"You"
-        }
-        addMessages(constructMessage);
-        sendMessage(queuedMessages[i]);
-      }
-    }
+    sendMessage(numberOfSends);
   }
 
   return (
@@ -49,7 +37,7 @@ const SendSignalR = ({sendMessage, addMessages}) => {
           <NumberSelector value={numberOfSends} size={35} changeValue={(value) => setNumberOfSends(value)}/>
         </div>
         <div style={{display:"flex", flex:1, flexDirection:"row", marginLeft:15, alignItems:"flex-end"}}>
-          <ArcButton onClick={executeMessages}>
+          <ArcButton onClick={executeMessages} disabled={disabled}>
             <p style={{fontSize:16, textAlign:"center", margin:10}}>
               Execute
             </p>
@@ -81,7 +69,8 @@ const SendSignalR = ({sendMessage, addMessages}) => {
 let mapStateToProps = state => {
   return {
     Messages: state.Messages,
+    queuedMessages: state.QueuedMessages
   }
 }
 
-export default connect(mapStateToProps, {clearMessages, setPopup, addMessages})(SendSignalR);
+export default connect(mapStateToProps, {clearMessages, setPopup, setQueuedMessages})(SendSignalR);
